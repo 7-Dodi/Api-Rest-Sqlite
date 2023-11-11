@@ -56,4 +56,58 @@ const addUser = async (req: Request, res:Response) => {
     }
 };
 
-export{listUser, addUser};
+//Método para criar token a um usuário
+const authenticationUser = async (req: Request, res: Response) =>{
+    const {username, password} = req.body;
+    
+    //Validations
+    if(!username){
+        res.status(404).json({"error": "The userName is mandatory"});
+    }
+    if(!password){
+        res.status(404).json({"error": "The password is mandatory"});
+    }
+
+    //Procurando usuário
+    const userNameExist = await prisma.user.findUnique({
+        where:{
+            userName: username
+        }
+    })
+
+    //Caso não encontre o usuário
+    if(!userNameExist){
+        res.status(404).json({ "error": "UserName does not exist" });
+    }else{
+        //Conferindo a senha 
+        const checkPassword = await brcyptjs.compare(password, userNameExist?.password);
+        
+        if(!checkPassword){
+            return res.status(422).json({"msg": 'Invalid password'}); 
+        }
+
+        try {
+            const secret = process.env.SECRET; //Segredo de token
+
+            //Prevenindo que o segredo não seja vazio
+            if(!secret){
+                throw new Error('JWT secret is not defined');
+            }
+
+            //Criando token
+            const token = jwt.sign(
+                {
+                    id: userNameExist?.id,
+                },
+                secret
+            );
+
+            res.status(200).json({"msg": 'Authentication successful', token})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({"msg":'Server error, try again later'});
+        }
+    }
+};
+
+export{listUser, addUser, authenticationUser};
