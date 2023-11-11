@@ -2,7 +2,10 @@
 CREATE TABLE "users" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT,
-    "userName" TEXT NOT NULL
+    "userName" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "latitude" DECIMAL NOT NULL,
+    "longitude" DECIMAL NOT NULL
 );
 
 -- CreateTable
