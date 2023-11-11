@@ -32,6 +32,7 @@ npm install
 # See the documentation for all the connection string options: https://pris.ly/d/connection-strings
 
 DATABASE_URL="file:./dev.db"
+SECRET="your-secret-token"
 ```
 5. Instancie o Banco de Dados:
 ```bash
@@ -53,8 +54,9 @@ npm run dev
 
 ## Rotas
 
-- GET /users: Retorna todos os usuários armazenados.
 - POST /users: Adiciona um novo usuário.
+- POST /users/authentication: Cria token para o usuário.
+- GET /users: Retorna todos os usuários armazenados (desde que o usuário tenha um token válido).
 - GET /technologies: Retorna todas as tecnologias do usúario passado pelo o `heard` da aplicação.
 - POST /technologies: Adiciona uma nova tecnologia ao usuário passado pelo o `heard` da aplicação.
 - PUT /technologies/:id: Atualiza o `title` e o `deadline` de uma tecnologia existente.
@@ -63,13 +65,17 @@ npm run dev
 
 ## Exemplos de uso de rotas:
 ### Requisição de Usuário:
-- **GET /users:**
-```bash
-http://localhost:5000/users
-```
 - **POST /users:**
 ```bash
 http://localhost:5000/technologies
+```
+- **POST /users/authentication:**
+```bash
+http://localhost:5000/users/authentication
+```
+- **GET /users:**
+```bash
+http://localhost:5000/users
 ```
 ### Requisição de Technologies:
 - **GET /technologies:**
